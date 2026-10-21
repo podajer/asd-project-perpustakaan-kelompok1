@@ -1,6 +1,7 @@
 # Sistem Perpustakaan Mini - Kelompok 1
 
 Project semester Algoritma dan Struktur Data, Sistem Informasi FTI Unmer Malang, 2026/2027.
+
 Dosen pengampu: Amadea Permana Sanusi, S.Tr.T., M.Tr.Kom
 
 ## 1. Anggota Kelompok
