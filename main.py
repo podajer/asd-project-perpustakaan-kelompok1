@@ -10,6 +10,7 @@ from services.cari_pengarang import cari_buku_pengarang
 from services.dipinjam import tampilkan_buku_dipinjam
 from services.edit import edit_buku
 from services.hapus import hapus_buku
+from services.hapus_genre import hapus_buku_per_genre
 from services.perpustakaan import muat_data_contoh, tambah_buku
 from services.rentang_tahun import filter_rentang_tahun
 from services.statistik import tampilkan_statistik_genre
@@ -33,7 +34,8 @@ def tampilkan_menu():
     print("9. Statistik Koleksi per Genre")
     print("10. Cari Buku Berdasarkan Pengarang")
     print("11. Filter Buku Berdasarkan Rentang Tahun")
-    print("12. Muat Data Contoh (opsional)")
+    print("12. Hapus Semua Buku Berdasarkan Genre")
+    print("13. Muat Data Contoh (opsional)")
     print("0. Keluar")
     print("----------------------------------------")
 
@@ -51,7 +53,8 @@ MENU_FITUR = {
     "9": tampilkan_statistik_genre,
     "10": cari_buku_pengarang,
     "11": filter_rentang_tahun,
-    "12": muat_data_contoh,
+    "12": hapus_buku_per_genre,
+    "13": muat_data_contoh,
 }
 
 
@@ -60,7 +63,7 @@ def main():
     try:
         while True:
             tampilkan_menu()
-            pilihan = input("Pilih menu (0-12): ").strip()
+            pilihan = input("Pilih menu (0-13): ").strip()
 
             if pilihan == "0":
                 print("Terima kasih. Program selesai.")
@@ -68,7 +71,7 @@ def main():
 
             fitur = MENU_FITUR.get(pilihan)
             if fitur is None:
-                print("Pilihan tidak valid. Masukkan angka 0 sampai 12.")
+                print("Pilihan tidak valid. Masukkan angka 0 sampai 13.")
                 continue
 
             try:

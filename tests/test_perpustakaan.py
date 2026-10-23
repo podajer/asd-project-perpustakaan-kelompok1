@@ -31,6 +31,7 @@ from services.edit import ubah_data_buku  # noqa: E402
 from services.rentang_tahun import filter_by_rentang_tahun  # noqa: E402
 from services.statistik import hitung_statistik_genre  # noqa: E402
 from services.hapus import ambil_buku_untuk_dihapus, hapus_dari_koleksi  # noqa: E402
+from services.hapus_genre import hapus_banyak, pilah_buku_genre  # noqa: E402
 from services.perpustakaan import ambil_buku, koleksi_buku, tambah_buku_baru  # noqa: E402
 from services.status import ubah_status  # noqa: E402
 from services.tampil import filter_by_genre, hitung_ringkasan  # noqa: E402
@@ -301,6 +302,40 @@ class TestRentangTahun(DasarTest):
             filter_by_rentang_tahun("abc", "2000")
         with self.assertRaises(DataKosongError):
             filter_by_rentang_tahun("2000", "")
+
+
+class TestHapusPerGenre(DasarTest):
+    def setUp(self):
+        super().setUp()
+        self.isi_contoh()  # Teknologi x2, Fiksi x1, Fiksi Ilmiah x1
+
+    def test_pencocokan_persis_bukan_partial(self):
+        bisa, tertahan = pilah_buku_genre("fiksi")  # tidak boleh ikut "Fiksi Ilmiah"
+        self.assertEqual([b["kode_buku"] for b in bisa], ["BK003"])
+        self.assertEqual(tertahan, [])
+
+    def test_buku_dipinjam_dilewati(self):
+        ambil_buku("BK002")["status"] = STATUS_DIPINJAM
+        bisa, tertahan = pilah_buku_genre("TEKNOLOGI")
+        self.assertEqual([b["kode_buku"] for b in bisa], ["BK001"])
+        self.assertEqual([b["kode_buku"] for b in tertahan], ["BK002"])
+
+    def test_hapus_banyak_hanya_yang_dipilih(self):
+        ambil_buku("BK002")["status"] = STATUS_DIPINJAM
+        bisa, _ = pilah_buku_genre("Teknologi")
+        self.assertEqual(hapus_banyak(bisa), 1)
+        self.assertEqual(sorted(b["kode_buku"] for b in koleksi_buku), ["BK002", "BK003", "BK004"])
+
+    def test_hapus_semua_buku_satu_genre(self):
+        bisa, _ = pilah_buku_genre("Teknologi")
+        self.assertEqual(hapus_banyak(bisa), 2)
+        self.assertEqual(len(koleksi_buku), 2)
+
+    def test_genre_kosong_dan_tidak_ada(self):
+        with self.assertRaises(DataKosongError):
+            pilah_buku_genre(" ")
+        with self.assertRaises(BukuTidakDitemukanError):
+            pilah_buku_genre("Komik")
 
 
 if __name__ == "__main__":
