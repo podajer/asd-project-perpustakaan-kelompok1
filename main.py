@@ -6,6 +6,8 @@ Jalankan dengan: python main.py
 
 from exceptions.custom_exceptions import PerpustakaanError
 from services.cari import cari_buku
+from services.dipinjam import tampilkan_buku_dipinjam
+from services.edit import edit_buku
 from services.hapus import hapus_buku
 from services.perpustakaan import muat_data_contoh, tambah_buku
 from services.status import update_status_buku
@@ -23,7 +25,9 @@ def tampilkan_menu():
     print("4. Update Status Buku (Pinjam / Kembali)")
     print("5. Filter Buku Berdasarkan Genre")
     print("6. Hapus Buku")
-    print("7. Muat Data Contoh (opsional)")
+    print("7. Edit Data Buku")
+    print("8. Daftar Buku yang Sedang Dipinjam")
+    print("9. Muat Data Contoh (opsional)")
     print("0. Keluar")
     print("----------------------------------------")
 
@@ -36,7 +40,9 @@ MENU_FITUR = {
     "4": update_status_buku,
     "5": filter_genre,
     "6": hapus_buku,
-    "7": muat_data_contoh,
+    "7": edit_buku,
+    "8": tampilkan_buku_dipinjam,
+    "9": muat_data_contoh,
 }
 
 
@@ -45,7 +51,7 @@ def main():
     try:
         while True:
             tampilkan_menu()
-            pilihan = input("Pilih menu (0-7): ").strip()
+            pilihan = input("Pilih menu (0-9): ").strip()
 
             if pilihan == "0":
                 print("Terima kasih. Program selesai.")
@@ -53,7 +59,7 @@ def main():
 
             fitur = MENU_FITUR.get(pilihan)
             if fitur is None:
-                print("Pilihan tidak valid. Masukkan angka 0 sampai 7.")
+                print("Pilihan tidak valid. Masukkan angka 0 sampai 9.")
                 continue
 
             try:
