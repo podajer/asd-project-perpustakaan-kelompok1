@@ -26,7 +26,10 @@ from models.buku import STATUS_DIPINJAM, STATUS_TERSEDIA, buat_buku, validasi_ta
 from services import perpustakaan  # noqa: E402
 from services.cari import cari  # noqa: E402
 from services.dipinjam import daftar_buku_dipinjam  # noqa: E402
+from services.cari_pengarang import cari_by_pengarang  # noqa: E402
 from services.edit import ubah_data_buku  # noqa: E402
+from services.rentang_tahun import filter_by_rentang_tahun  # noqa: E402
+from services.statistik import hitung_statistik_genre  # noqa: E402
 from services.hapus import ambil_buku_untuk_dihapus, hapus_dari_koleksi  # noqa: E402
 from services.perpustakaan import ambil_buku, koleksi_buku, tambah_buku_baru  # noqa: E402
 from services.status import ubah_status  # noqa: E402
@@ -240,6 +243,64 @@ class TestDaftarDipinjam(DasarTest):
         ambil_buku("BK002")["status"] = STATUS_DIPINJAM
         ambil_buku("BK004")["status"] = STATUS_DIPINJAM
         self.assertEqual([b["kode_buku"] for b in daftar_buku_dipinjam()], ["BK002", "BK004"])
+
+
+class TestStatistikGenre(DasarTest):
+    def test_kosong(self):
+        self.assertEqual(hitung_statistik_genre(), [])
+
+    def test_pengelompokan_tidak_case_sensitive(self):
+        self.isi_contoh()
+        tambah_buku_baru("BK005", "Buku Lain", "X", "teknologi", "2010")  # huruf kecil
+        ambil_buku("BK002")["status"] = STATUS_DIPINJAM
+        hasil = {d["genre"]: d for d in hitung_statistik_genre()}
+        self.assertEqual(len(hasil), 3)  # Teknologi, Fiksi, Fiksi Ilmiah
+        self.assertEqual(hasil["Teknologi"]["total"], 3)
+        self.assertEqual(hasil["Teknologi"]["dipinjam"], 1)
+        self.assertEqual(hasil["Teknologi"]["tersedia"], 2)
+        self.assertEqual(hasil["Fiksi"]["total"], 1)  # "Fiksi Ilmiah" genre terpisah
+
+
+class TestCariPengarang(DasarTest):
+    def setUp(self):
+        super().setUp()
+        self.isi_contoh()
+
+    def test_partial_tidak_case_sensitive(self):
+        self.assertEqual([b["kode_buku"] for b in cari_by_pengarang("SAGAN")], ["BK004"])
+        self.assertEqual(len(cari_by_pengarang("an")), 2)  # Andrea Hirata, Carl Sagan
+
+    def test_tidak_ditemukan(self):
+        with self.assertRaises(BukuTidakDitemukanError):
+            cari_by_pengarang("tidak ada")
+
+    def test_kosong(self):
+        with self.assertRaises(DataKosongError):
+            cari_by_pengarang("  ")
+
+
+class TestRentangTahun(DasarTest):
+    def setUp(self):
+        super().setUp()
+        self.isi_contoh()  # 2020, 2009, 2005, 1980
+
+    def test_batas_termasuk(self):
+        awal, akhir, hasil = filter_by_rentang_tahun("2005", "2009")
+        self.assertEqual((awal, akhir), (2005, 2009))
+        self.assertEqual(sorted(b["kode_buku"] for b in hasil), ["BK002", "BK003"])
+
+    def test_tidak_ada_hasil(self):
+        self.assertEqual(filter_by_rentang_tahun("1990", "2000")[2], [])
+
+    def test_awal_lebih_besar_ditolak(self):
+        with self.assertRaises(InputTidakValidError):
+            filter_by_rentang_tahun("2020", "2000")
+
+    def test_tahun_tidak_valid(self):
+        with self.assertRaises(TahunTidakValidError):
+            filter_by_rentang_tahun("abc", "2000")
+        with self.assertRaises(DataKosongError):
+            filter_by_rentang_tahun("2000", "")
 
 
 if __name__ == "__main__":
