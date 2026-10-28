@@ -1,20 +1,27 @@
 """
 status.py (services)
 Fitur 4: Update Status Buku (toggle otomatis Tersedia <-> Dipinjam).
+Terintegrasi dengan pencatatan riwayat transaksi.
 """
 
 from models.buku import STATUS_DIPINJAM, STATUS_TERSEDIA
 from services.perpustakaan import ambil_buku, konfirmasi_ya_tidak
+from services.riwayat import catat_transaksi
 
 
-def ubah_status(buku):
+def ubah_status(buku, peminjam="Umum"):
     """
     Logika Fitur 4: membalik status buku (Tersedia <-> Dipinjam).
+    Mencatat aksi ke riwayat transaksi.
     Mengembalikan tuple (status_lama, status_baru).
     """
     status_lama = buku["status"]
     status_baru = STATUS_DIPINJAM if status_lama == STATUS_TERSEDIA else STATUS_TERSEDIA
     buku["status"] = status_baru
+
+    aksi = "PINJAM" if status_baru == STATUS_DIPINJAM else "KEMBALI"
+    catat_transaksi(buku["kode_buku"], buku["judul"], aksi, peminjam=peminjam)
+
     return status_lama, status_baru
 
 
@@ -35,7 +42,13 @@ def update_status_buku():
         print("Perubahan status dibatalkan.")
         return
 
-    status_lama, status_baru = ubah_status(buku)
+    peminjam = "Umum"
+    if status_tujuan == STATUS_DIPINJAM:
+        input_peminjam = input("Nama Peminjam (kosongkan jika 'Umum'): ").strip()
+        if input_peminjam:
+            peminjam = input_peminjam
+
+    status_lama, status_baru = ubah_status(buku, peminjam=peminjam)
     kata_kerja = "dipinjam" if status_baru == STATUS_DIPINJAM else "dikembalikan"
     print(
         "Buku '{}' berhasil {}. Status diubah: {} menjadi {}.".format(
