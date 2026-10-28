@@ -12,11 +12,16 @@ from services.edit import edit_buku
 from services.ekspor import ekspor_data_buku
 from services.hapus import hapus_buku
 from services.hapus_genre import hapus_buku_per_genre
-from services.perpustakaan import muat_data_contoh, tambah_buku
+from services.perpustakaan import (
+    koleksi_buku,
+    muat_data_contoh,
+    tambah_buku,
+)
 from services.rentang_tahun import filter_rentang_tahun
-from services.riwayat import tampilkan_riwayat_transaksi
+from services.riwayat import riwayat_transaksi, tampilkan_riwayat_transaksi
 from services.statistik import tampilkan_statistik_genre
 from services.status import update_status_buku
+from services.storage import inisialisasi_data
 from services.tampil import filter_genre, tampilkan_semua_buku
 from services.urutkan import urutkan_buku
 
@@ -68,7 +73,10 @@ MENU_FITUR = {
 
 
 def main():
-    """Loop utama: tampilkan menu, jalankan fitur, lalu kembali ke menu."""
+    """Loop utama: inisialisasi persistensi data, tampilkan menu, lalu jalankan fitur."""
+    # Muat data lokal yang tersimpan di disk ke memori (Array of Struct)
+    inisialisasi_data(koleksi_buku, riwayat_transaksi, callback_contoh=muat_data_contoh)
+
     try:
         while True:
             tampilkan_menu()

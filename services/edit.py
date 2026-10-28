@@ -5,7 +5,8 @@ Kode buku dan status tidak bisa diubah lewat fitur ini.
 """
 
 from models.buku import validasi_tahun
-from services.perpustakaan import ambil_buku
+from services.perpustakaan import ambil_buku, koleksi_buku
+from services.storage import sinkronkan_koleksi
 
 
 def ubah_data_buku(buku, judul_baru, pengarang_baru, genre_baru, tahun_baru):
@@ -35,6 +36,10 @@ def ubah_data_buku(buku, judul_baru, pengarang_baru, genre_baru, tahun_baru):
         if buku[atribut] != nilai:
             buku[atribut] = nilai
             atribut_berubah.append(atribut)
+
+    if atribut_berubah:
+        sinkronkan_koleksi(koleksi_buku)
+
     return atribut_berubah
 
 
@@ -50,11 +55,10 @@ def edit_buku():
     tahun_baru = input("Tahun terbit [{}]: ".format(buku["tahun_terbit"]))
 
     atribut_berubah = ubah_data_buku(buku, judul_baru, pengarang_baru, genre_baru, tahun_baru)
+
     if not atribut_berubah:
-        print("Tidak ada perubahan data.")
+        print("Tidak ada data yang diubah.")
         return
-    print(
-        "Data buku '{}' dengan kode {} berhasil diperbarui ({}).".format(
-            buku["judul"], buku["kode_buku"], ", ".join(atribut_berubah)
-        )
-    )
+
+    print("Data buku berhasil diperbarui.")
+    print("Atribut yang diubah: {}".format(", ".join(atribut_berubah)))

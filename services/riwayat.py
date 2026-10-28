@@ -1,11 +1,12 @@
 """
 riwayat.py (services)
 Fitur Pencatatan dan Penampilan Riwayat Transaksi Perpustakaan.
-Mencatat aktivitas peminjaman dan pengembalian buku.
+Mencatat aktivitas peminjaman dan pengembalian buku serta menyimpannya ke storage lokal.
 """
 
 from datetime import datetime
 from exceptions.custom_exceptions import DataKosongError
+from services.storage import sinkronkan_riwayat
 
 # List of dict untuk menyimpan riwayat transaksi
 riwayat_transaksi = []
@@ -13,7 +14,7 @@ riwayat_transaksi = []
 
 def catat_transaksi(kode_buku, judul, aksi, peminjam="Umum"):
     """
-    Mencatat log transaksi buku ke memori.
+    Mencatat log transaksi buku ke memori dan storage.
     :param kode_buku: Kode buku
     :param judul: Judul buku
     :param aksi: 'PINJAM' atau 'KEMBALI'
@@ -28,6 +29,7 @@ def catat_transaksi(kode_buku, judul, aksi, peminjam="Umum"):
         "peminjam": peminjam,
     }
     riwayat_transaksi.append(log_item)
+    sinkronkan_riwayat(riwayat_transaksi)
     return log_item
 
 

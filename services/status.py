@@ -1,12 +1,13 @@
 """
 status.py (services)
 Fitur 4: Update Status Buku (toggle otomatis Tersedia <-> Dipinjam).
-Terintegrasi dengan pencatatan riwayat transaksi.
+Terintegrasi dengan pencatatan riwayat transaksi dan penyimpanan storage lokal.
 """
 
 from models.buku import STATUS_DIPINJAM, STATUS_TERSEDIA
-from services.perpustakaan import ambil_buku, konfirmasi_ya_tidak
+from services.perpustakaan import ambil_buku, konfirmasi_ya_tidak, koleksi_buku
 from services.riwayat import catat_transaksi
+from services.storage import sinkronkan_koleksi
 
 
 def ubah_status(buku, peminjam="Umum"):
@@ -21,6 +22,7 @@ def ubah_status(buku, peminjam="Umum"):
 
     aksi = "PINJAM" if status_baru == STATUS_DIPINJAM else "KEMBALI"
     catat_transaksi(buku["kode_buku"], buku["judul"], aksi, peminjam=peminjam)
+    sinkronkan_koleksi(koleksi_buku)
 
     return status_lama, status_baru
 
