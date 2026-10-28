@@ -18,7 +18,7 @@ Project semester Algoritma dan Struktur Data, Program Studi Sistem Informasi FTI
 ---
 
 ## 2. Deskripsi Sistem
-**Sistem Perpustakaan Mini** adalah aplikasi berbasis antarmuka baris perintah (CLI) yang dibangun dengan bahasa Python untuk mengelola koleksi buku perpustakaan secara interaktif. Sistem ini mengimplementasikan konsep struktur data **Array of Struct (list of dictionary)** dalam memori serta berbagai algoritma dasar seperti pencarian (linear search & filtering), pengurutan data (*sorting*), pengolahan data riwayat transaksi, dan ekspor data eksternal.
+**Sistem Perpustakaan Mini** adalah aplikasi berbasis antarmuka baris perintah (CLI) yang dibangun dengan bahasa Python untuk mengelola koleksi buku perpustakaan secara interaktif. Sistem ini mengimplementasikan konsep struktur data **Array of Struct (list of dictionary)** dalam memori, database persistensi file lokal (JSON), serta berbagai algoritma dasar seperti pencarian (linear search & filtering), pengurutan (*sorting*), log riwayat transaksi, dan ekspor data.
 
 ---
 
@@ -26,7 +26,7 @@ Project semester Algoritma dan Struktur Data, Program Studi Sistem Informasi FTI
 1. **Tambah Buku Baru**: Menambahkan buku baru ke koleksi dengan validasi data input.
 2. **Tampilkan Semua Buku**: Menampilkan seluruh data dalam format tabel rapi.
 3. **Cari Buku**: Mencari buku berdasarkan kode atau kata kunci pada judul.
-4. **Update Status Buku**: Mengubah status ketersediaan buku (`Tersedia` / `Dipinjam`) dan otomatis mencatat ke log riwayat.
+4. **Update Status Buku**: Mengubah status ketersediaan buku (`Tersedia` / `Dipinjam`) dan otomatis mencatat ke log riwayat transaksi.
 5. **Filter Buku Berdasarkan Genre**: Menyaring daftar buku sesuai genre tertentu.
 6. **Hapus Buku**: Menghapus data buku tertentu berdasarkan kode.
 7. **Edit Data Buku**: Mengubah informasi buku yang sudah ada.
@@ -38,13 +38,17 @@ Project semester Algoritma dan Struktur Data, Program Studi Sistem Informasi FTI
 13. **Urutkan Koleksi (Sorting)**: Mengurutkan buku berdasarkan judul, tahun terbit, atau pengarang secara menaik (*ascending*) atau menurun (*descending*).
 14. **Ekspor Data (CSV / JSON)**: Mengekspor koleksi buku ke file `.csv` atau `.json` untuk kebutuhan backup dan integrasi.
 15. **Riwayat Peminjaman & Pengembalian**: Menelusuri seluruh riwayat aktivitas transaksi buku dan nama peminjam.
-16. **Muat Data Contoh**: Menyediakan sample data dummy untuk demonstrasi aplikasi.
+16. **Database Persistensi Lokal**: Otomatis menyimpan dan memuat data buku & riwayat dari folder `data/` sehingga data tidak hilang saat program ditutup.
+17. **Muat Data Contoh**: Menyediakan sample data dummy untuk demonstrasi aplikasi.
 
 ---
 
 ## 4. Struktur Direktori Proyek
 ```text
 asd-project-perpustakaan-kelompok1/
+├── data/
+│   ├── koleksi_buku.json          # Database lokal JSON koleksi buku
+│   └── riwayat_transaksi.json     # Log riwayat peminjaman & pengembalian
 ├── exceptions/
 │   ├── __init__.py
 │   └── custom_exceptions.py       # Custom exception handling
@@ -65,12 +69,14 @@ asd-project-perpustakaan-kelompok1/
 │   ├── riwayat.py                 # Log riwayat peminjaman/pengembalian
 │   ├── statistik.py               # Statistik koleksi
 │   ├── status.py                  # Update status pinjam/kembali
+│   ├── storage.py                 # Persistensi data lokal JSON
 │   ├── tampil.py                  # Tampil tabel & filter genre
 │   └── urutkan.py                 # Algoritma pengurutan (Sorting)
 ├── tests/
 │   ├── __init__.py
 │   ├── test_perpustakaan.py       # Unit tests fitur utama
 │   ├── test_riwayat.py            # Unit tests riwayat transaksi
+│   ├── test_storage.py            # Unit tests modul storage persistensi
 │   └── test_urutkan_dan_ekspor.py # Unit tests fitur sort & ekspor
 ├── main.py                        # File entry point program
 ├── README.md                      # Dokumentasi proyek
@@ -86,7 +92,7 @@ Pastikan Python 3.x telah terinstal di komputer Anda.
    ```bash
    python main.py
    ```
-2. **Jalankan seluruh Unit Tests:**
+2. **Jalankan seluruh Unit Tests (57 tests):**
    ```bash
    python -m unittest discover tests
    ```
@@ -94,6 +100,16 @@ Pastikan Python 3.x telah terinstal di komputer Anda.
 ---
 
 ## 6. Standar Branching Git (Git Flow)
-- **`main`**: Branch rilis produksi yang stabil dan bersih.
+Proyek ini mengadopsi standar **Git Flow** kolaboratif:
+- **`main`**: Branch rilis produksi yang stabil, bersih, dan memuat seluruh fitur final.
 - **`develop`**: Branch integrasi utama tempat penggabungan fitur sebelum dirilis ke `main`.
-- **`feat/<nama-fitur>`**: Branch pengembangan fitur baru per anggota tim.
+- **`feat/<nama-fitur>`**: Branch pengembangan fitur baru per anggota tim:
+  - `feat/cari` : Pencarian buku dan pengarang
+  - `feat/edit-dan-pinjam` : Fitur edit buku dan daftar buku dipinjam
+  - `feat/hapus` : Fitur hapus buku dan hapus per genre
+  - `feat/tampil-filter` : Tampil tabel buku dan filter genre
+  - `feat/update-status` : Toggle status ketersediaan buku
+  - `feat/urut-dan-ekspor` : Algoritma sorting dan ekspor data CSV/JSON
+  - `feat/riwayat-dan-ringkasan` : Log riwayat transaksi buku
+  - `feat/database-persistensi-lokal` : Penyimpanan otomatis file database lokal
+  - `feat/dokumentasi-dan-perapihan` : Perapihan dokumentasi dan struktur repo
