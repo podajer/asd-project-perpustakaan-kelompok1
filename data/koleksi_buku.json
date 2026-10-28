@@ -1,0 +1,42 @@
+[
+    {
+        "kode_buku": "BK001",
+        "judul": "Algoritma dan Pemrograman",
+        "pengarang": "Rinaldi Munir",
+        "genre": "Teknologi",
+        "tahun_terbit": 2020,
+        "status": "Tersedia"
+    },
+    {
+        "kode_buku": "BK002",
+        "judul": "Pengantar Algoritma",
+        "pengarang": "Cormen",
+        "genre": "Teknologi",
+        "tahun_terbit": 2009,
+        "status": "Dipinjam"
+    },
+    {
+        "kode_buku": "BK003",
+        "judul": "Laskar Pelangi",
+        "pengarang": "Andrea Hirata",
+        "genre": "Fiksi",
+        "tahun_terbit": 2005,
+        "status": "Tersedia"
+    },
+    {
+        "kode_buku": "BK004",
+        "judul": "Ilmu Antariksa",
+        "pengarang": "Carl Sagan",
+        "genre": "Fiksi Ilmiah",
+        "tahun_terbit": 1980,
+        "status": "Tersedia"
+    },
+    {
+        "kode_buku": "BK005",
+        "judul": "Buku Lain",
+        "pengarang": "X",
+        "genre": "teknologi",
+        "tahun_terbit": 2010,
+        "status": "Tersedia"
+    }
+]
