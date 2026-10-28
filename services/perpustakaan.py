@@ -15,6 +15,7 @@ from exceptions.custom_exceptions import (
     KodeDuplikatError,
 )
 from models.buku import STATUS_DIPINJAM, STATUS_TERSEDIA, buat_buku
+from services.storage import sinkronkan_koleksi
 
 # Penting: list ini hanya boleh diubah isinya (append / remove), jangan
 # di-assign ulang (koleksi_buku = ...), karena modul lain mengimpor list yang sama.
@@ -80,6 +81,7 @@ def tambah_buku_baru(kode, judul, pengarang, genre, teks_tahun):
 
     buku_baru = buat_buku(kode, judul, pengarang, genre, teks_tahun)
     koleksi_buku.append(buku_baru)
+    sinkronkan_koleksi(koleksi_buku)
     return buku_baru
 
 
@@ -103,7 +105,7 @@ def tambah_buku():
 # ---------------------------------------------------------------------------
 # Data contoh (opsional, untuk demo dan screenshot laporan)
 # ---------------------------------------------------------------------------
-def muat_data_contoh():
+def muat_data_contoh(pesan=True):
     """Menambahkan beberapa buku contoh. Kode yang sudah ada dilewati."""
     contoh = [
         ("BK001", "Algoritma dan Pemrograman", "Rinaldi Munir", "Teknologi", "2020", STATUS_TERSEDIA),
@@ -122,4 +124,7 @@ def muat_data_contoh():
         buku["status"] = status
         koleksi_buku.append(buku)
         ditambahkan += 1
-    print("{} buku contoh ditambahkan ke koleksi.".format(ditambahkan))
+
+    sinkronkan_koleksi(koleksi_buku)
+    if pesan:
+        print("{} buku contoh ditambahkan ke koleksi.".format(ditambahkan))

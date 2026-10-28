@@ -6,6 +6,7 @@ Fitur 6: Hapus Buku (tidak boleh jika berstatus Dipinjam, wajib konfirmasi).
 from exceptions.custom_exceptions import BukuSedangDipinjamError
 from models.buku import STATUS_DIPINJAM
 from services.perpustakaan import ambil_buku, konfirmasi_ya_tidak, koleksi_buku
+from services.storage import sinkronkan_koleksi
 
 
 def ambil_buku_untuk_dihapus(kode):
@@ -23,6 +24,7 @@ def ambil_buku_untuk_dihapus(kode):
 def hapus_dari_koleksi(buku):
     """Logika Fitur 6 (tahap penghapusan): membuang buku dari koleksi."""
     koleksi_buku.remove(buku)
+    sinkronkan_koleksi(koleksi_buku)
 
 
 def hapus_buku():

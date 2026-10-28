@@ -1,0 +1,16 @@
+[
+    {
+        "waktu": "2026-10-28 11:35:58",
+        "kode_buku": "BK001",
+        "judul": "Struktur Data",
+        "aksi": "PINJAM",
+        "peminjam": "Ahmad"
+    },
+    {
+        "waktu": "2026-10-28 11:35:58",
+        "kode_buku": "BK001",
+        "judul": "Struktur Data",
+        "aksi": "KEMBALI",
+        "peminjam": "Umum"
+    }
+]
