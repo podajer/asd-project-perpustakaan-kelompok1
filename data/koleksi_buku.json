@@ -10,7 +10,7 @@
     {
         "kode_buku": "BK002",
         "judul": "Pengantar Algoritma",
-        "pengarang": "Cormen",
+        "pengarang": "Thomas H. Cormen",
         "genre": "Teknologi",
         "tahun_terbit": 2009,
         "status": "Dipinjam"
@@ -25,18 +25,34 @@
     },
     {
         "kode_buku": "BK004",
-        "judul": "Ilmu Antariksa",
-        "pengarang": "Carl Sagan",
-        "genre": "Fiksi Ilmiah",
+        "judul": "Bumi Manusia",
+        "pengarang": "Pramoedya Ananta Toer",
+        "genre": "Fiksi Sejarah",
         "tahun_terbit": 1980,
         "status": "Tersedia"
     },
     {
         "kode_buku": "BK005",
-        "judul": "Buku Lain",
-        "pengarang": "X",
-        "genre": "teknologi",
-        "tahun_terbit": 2010,
+        "judul": "Sapiens",
+        "pengarang": "Yuval Noah Harari",
+        "genre": "Sejarah",
+        "tahun_terbit": 2011,
+        "status": "Dipinjam"
+    },
+    {
+        "kode_buku": "BK006",
+        "judul": "Cosmos",
+        "pengarang": "Carl Sagan",
+        "genre": "Sains",
+        "tahun_terbit": 1980,
+        "status": "Tersedia"
+    },
+    {
+        "kode_buku": "BK007",
+        "judul": "Dilan 1990",
+        "pengarang": "Pidi Baiq",
+        "genre": "Fiksi Remaja",
+        "tahun_terbit": 2014,
         "status": "Tersedia"
     }
 ]
